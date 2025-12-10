@@ -1,14 +1,18 @@
 package com.example.fastfood_service.model;
-
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+// Indicamos el orden en que queremos que salgan los campos cuando se convierta a JSON
 @JsonPropertyOrder({ "id", "nombreCliente", "descripcion", "monto", "estado" })
 public class Pedido {
 
     private int id;
+
     private String nombreCliente;
+
     private String descripcion;
+
     private double monto;
+
     private String estado;
 
     public Pedido() {
@@ -22,7 +26,7 @@ public class Pedido {
         this.estado = estado;
     }
 
-    // constructor copia (para historial / rollback)
+    // Se usa para guardar el "antes" y "después" en el historial (rollback)
     public Pedido(Pedido other) {
         this.id = other.id;
         this.nombreCliente = other.nombreCliente;

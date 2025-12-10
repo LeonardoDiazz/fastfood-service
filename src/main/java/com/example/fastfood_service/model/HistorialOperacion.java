@@ -1,9 +1,13 @@
 package com.example.fastfood_service.model;
 
+// Se usa para poder deshacer (rollback) cambios, guardando el "antes" y el "después"
 public class HistorialOperacion {
 
-    private String tipoOperacion; // CREAR, CANCELAR, DESPACHAR
+    // Tipo de operación realizada: CREAR, CANCELAR, DESPACHAR
+    private String tipoOperacion;
+
     private Pedido pedidoAntes;
+
     private Pedido pedidoDespues;
 
     public HistorialOperacion(String tipoOperacion, Pedido pedidoAntes, Pedido pedidoDespues) {
