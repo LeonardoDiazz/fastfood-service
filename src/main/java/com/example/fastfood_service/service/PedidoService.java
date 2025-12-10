@@ -108,13 +108,21 @@ public class PedidoService {
         Pedido[] arr = pedidos.toArray();
         int total = arr.length;
         double totalMonto = 0.0;
+        double totalMontoSinCancelados = 0.0;
         int registrados = 0;
         int despachados = 0;
         int cancelados = 0;
 
         for (Pedido p : arr) {
-            totalMonto += p.getMonto();
+            double monto = p.getMonto();
             String estado = p.getEstado();
+
+            totalMonto += monto;
+
+            if (!"CANCELADO".equals(estado)) {
+                totalMontoSinCancelados += monto;
+            }
+
             if ("REGISTRADO".equals(estado)) {
                 registrados++;
             } else if ("DESPACHADO".equals(estado)) {
@@ -127,6 +135,7 @@ public class PedidoService {
         return new EstadisticasPedidos(
                 total,
                 totalMonto,
+                totalMontoSinCancelados,
                 registrados,
                 despachados,
                 cancelados
@@ -136,14 +145,20 @@ public class PedidoService {
     public static class EstadisticasPedidos {
         private int totalPedidos;
         private double totalMonto;
+        private double totalMontoSinCancelados;
         private int totalRegistrados;
         private int totalDespachados;
         private int totalCancelados;
 
-        public EstadisticasPedidos(int totalPedidos, double totalMonto,
-                                   int totalRegistrados, int totalDespachados, int totalCancelados) {
+        public EstadisticasPedidos(int totalPedidos,
+                                   double totalMonto,
+                                   double totalMontoSinCancelados,
+                                   int totalRegistrados,
+                                   int totalDespachados,
+                                   int totalCancelados) {
             this.totalPedidos = totalPedidos;
             this.totalMonto = totalMonto;
+            this.totalMontoSinCancelados = totalMontoSinCancelados;
             this.totalRegistrados = totalRegistrados;
             this.totalDespachados = totalDespachados;
             this.totalCancelados = totalCancelados;
@@ -151,6 +166,7 @@ public class PedidoService {
 
         public int getTotalPedidos() { return totalPedidos; }
         public double getTotalMonto() { return totalMonto; }
+        public double getTotalMontoSinCancelados() { return totalMontoSinCancelados; }
         public int getTotalRegistrados() { return totalRegistrados; }
         public int getTotalDespachados() { return totalDespachados; }
         public int getTotalCancelados() { return totalCancelados; }
@@ -192,7 +208,11 @@ public class PedidoService {
                     throw new IllegalStateException("No se encontró el pedido para rollback");
                 }
                 actual.setEstado(antes.getEstado());
-                if ("REGISTRADO".equals(antes.getEstado()) || "EN_PREPARACION".equals(antes.getEstado())) {
+
+                String estadoAnterior = antes.getEstado();
+                if ("REGISTRADO".equals(estadoAnterior) || "EN_PREPARACION".equals(estadoAnterior)) {
+                    // por si acaso ya estaba en cola, lo saco y luego lo vuelvo a meter
+                    colaPendientes.removeById(actual.getId());
                     colaPendientes.enqueue(actual);
                 }
                 return actual;
@@ -203,10 +223,17 @@ public class PedidoService {
                 if (actual == null) {
                     throw new IllegalStateException("No se encontró el pedido para rollback");
                 }
+
+                // regresamos el estado anterior
                 actual.setEstado(antes.getEstado());
-                if ("REGISTRADO".equals(antes.getEstado()) || "EN_PREPARACION".equals(antes.getEstado())) {
-                    colaPendientes.enqueue(actual);
+
+                String estadoAnterior = antes.getEstado();
+                if ("REGISTRADO".equals(estadoAnterior) || "EN_PREPARACION".equals(estadoAnterior)) {
+                    // queremos que la cola quede 1,2,3 igual que antes
+                    colaPendientes.removeById(actual.getId()); // defensivo
+                    colaPendientes.enqueueFront(actual);       // lo mandamos al frente
                 }
+
                 return actual;
             }
             default:

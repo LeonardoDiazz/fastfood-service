@@ -1,6 +1,8 @@
 package com.example.fastfood_service.datastructures;
 import com.example.fastfood_service.model.Pedido;
 
+import com.example.fastfood_service.model.Pedido;
+
 public class PedidoQueue {
 
     private static class Node {
@@ -15,6 +17,7 @@ public class PedidoQueue {
     private Node front;
     private Node rear;
 
+    // Encolar al final
     public void enqueue(Pedido pedido) {
         Node nuevo = new Node(pedido);
         if (rear == null) {
@@ -25,6 +28,7 @@ public class PedidoQueue {
         }
     }
 
+    // Desencolar
     public Pedido dequeue() {
         if (front == null) {
             return null;
@@ -41,7 +45,6 @@ public class PedidoQueue {
         return front == null;
     }
 
-    // Eliminar un pedido de la cola por id (para cancelar / rollback)
     public void removeById(int id) {
         Node actual = front;
         Node anterior = null;
@@ -60,6 +63,17 @@ public class PedidoQueue {
             }
             anterior = actual;
             actual = actual.next;
+        }
+    }
+
+    // 👈 ESTE método es el que debe existir
+    public void enqueueFront(Pedido pedido) {
+        Node nuevo = new Node(pedido);
+        if (front == null) {
+            front = rear = nuevo;
+        } else {
+            nuevo.next = front;
+            front = nuevo;
         }
     }
 }
