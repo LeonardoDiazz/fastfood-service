@@ -78,7 +78,7 @@ public class PedidoService {
         return pedidos.toArray();
     }
 
-    // 4.3 Buscar por id
+    //  Buscar por id
     // Busca un pedido por su id, si no existe lanza excepción
     public Pedido buscarPorId(int id) {
         // Buscamos en la lista simplemente enlazada
@@ -152,7 +152,7 @@ public class PedidoService {
         return pedido;
     }
 
-    // 4.6 Estadísticas
+    //  Estadísticas
     // Calcula estadísticas básicas sobre los pedidos
     public EstadisticasPedidos obtenerEstadisticas() {
         // Obtenemos todos los pedidos como arreglo
@@ -230,7 +230,7 @@ public class PedidoService {
         public int getTotalCancelados() { return totalCancelados; }
     }
 
-    //  4.7 Total recursivo
+    // Total recursivo
     // Calcula el monto total de todos los pedidos
     public double calcularTotalMontoRecursivo() {
         // Pasamos la lista a arreglo para facilitar el recorrido recursivo
@@ -249,7 +249,7 @@ public class PedidoService {
         return arr[index].getMonto() + calcularTotalRecursivo(arr, index + 1);
     }
 
-    // 4.8 Rollback
+    // Rollback
     // Deshace la ÚLTIMA operación realizada (CREAR, CANCELAR o DESPACHAR)
     public Pedido rollbackUltimaOperacion() {
         // Si la pila de historial está vacía, no hay nada que revertir
