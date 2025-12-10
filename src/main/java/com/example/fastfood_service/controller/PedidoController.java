@@ -24,7 +24,7 @@ public class PedidoController {
     }
 
     // 4.1 Registrar
-    @Operation(summary = "Registrar un nuevo pedido")
+    @Operation(summary = "Registrar nuevo pedido")
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody Pedido pedidoRequest) {
         try {
@@ -43,7 +43,7 @@ public class PedidoController {
     }
 
     // 4.3 Obtener por id
-    @Operation(summary = "Obtener un pedido por id")
+    @Operation(summary = "Obtener pedido por id")
     @GetMapping("/{id}")
     public ResponseEntity<?> obtener(@PathVariable int id) {
         try {
@@ -56,7 +56,7 @@ public class PedidoController {
     }
 
     // 4.4 Cancelar pedido
-    @Operation(summary = "Cancelar un pedido por id")
+    @Operation(summary = "Cancelar pedido por id")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> cancelar(@PathVariable int id) {
         try {
@@ -72,7 +72,7 @@ public class PedidoController {
     }
 
     // 4.5 Despachar siguiente pedido
-    @Operation(summary = "Despachar el siguiente pedido en la cola")
+    @Operation(summary = "Despachar el siguiente pedido")
     @PostMapping("/despachar")
     public ResponseEntity<?> despachar() {
         try {
@@ -88,7 +88,7 @@ public class PedidoController {
     }
 
     // 4.6 Estadísticas
-    @Operation(summary = "Obtener estadísticas de pedidos")
+    @Operation(summary = "Estadísticas de pedidos")
     @GetMapping("/estadisticas")
     public ResponseEntity<EstadisticasPedidos> estadisticas() {
         return ResponseEntity.ok(servicio.obtenerEstadisticas());
@@ -103,7 +103,7 @@ public class PedidoController {
     }
 
     // 4.8 Rollback
-    @Operation(summary = "Realizar rollback de la última operación")
+    @Operation(summary = "Realizar rollback ")
     @PostMapping("/rollback")
     public ResponseEntity<?> rollback() {
         try {
