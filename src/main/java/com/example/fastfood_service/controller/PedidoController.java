@@ -95,7 +95,7 @@ public class PedidoController {
     }
 
     // 4.7 Total recursivo
-    @Operation(summary = "Calcular monto total de pedidos usando un método recursivo")
+    @Operation(summary = "Calcular monto total de pedidos")
     @GetMapping("/total-recursivo")
     public ResponseEntity<Map<String, Double>> totalRecursivo() {
         double total = servicio.calcularTotalMontoRecursivo();
